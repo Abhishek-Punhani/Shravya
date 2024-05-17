@@ -7,6 +7,7 @@ const cookieParser=require("cookie-parser");
 const compression=require("compression");
 const fileUpload=require("express-fileupload");
 const cors=require("cors");
+const logger=require("./configs/logger");
 require("dotenv").config();
 const app=express();
 
