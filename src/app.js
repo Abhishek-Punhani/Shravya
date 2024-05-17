@@ -8,6 +8,7 @@ const compression=require("compression");
 const fileUpload=require("express-fileupload");
 const cors=require("cors");
 const logger=require("./configs/logger");
+const createHttpError=require("http-errors");
 require("dotenv").config();
 const app=express();
 
@@ -25,4 +26,17 @@ app.use(cookieParser());
 app.use(compression());
 app.use(fileUpload({useTempFiles:true}));
 app.use(cors());
+
+
+app.use(async(req,res,next)=>{
+    next(createHttpError.NotFound("Page Not Found !"));
+})
+// http errors
+app.use(async(err,req,res,next)=>{
+    res.status(err.status || 500);
+    res.send( {error :{
+        status:err.status || 500,
+        message:err.message,
+    }})
+})
 module.exports=app;
