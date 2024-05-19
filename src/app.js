@@ -9,8 +9,12 @@ const fileUpload=require("express-fileupload");
 const cors=require("cors");
 const logger=require("./configs/logger");
 const createHttpError=require("http-errors");
+const routes=require("./routes/index.js");
+
+
 require("dotenv").config();
 const app=express();
+
 
 if(process.env.NODE_ENV !=="production"){
 app.use(morgan("dev"));
@@ -27,6 +31,8 @@ app.use(compression());
 app.use(fileUpload({useTempFiles:true}));
 app.use(cors());
 
+
+app.use("/",routes);
 
 app.use(async(req,res,next)=>{
     next(createHttpError.NotFound("Page Not Found !"));
