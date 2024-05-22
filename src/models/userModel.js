@@ -20,6 +20,7 @@ const userSchema=mongoose.Schema({
     status:{
         type:String,
         default:"Hey there ! I am on Shravya",
+        maxLength:[64,"Status must be less than 64 characters ."],
     },
     password:{
         type:String,

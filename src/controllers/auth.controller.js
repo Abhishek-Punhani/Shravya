@@ -24,8 +24,17 @@ path:"/auth/refereshtoken",
 maxAge:30*60*60*1000,
 })
 console.table({access_token,refresh_token});
-
-   
+res.json({
+  message: "register success.",
+  user: {
+    _id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
+    picture: newUser.picture,
+    status: newUser.status,
+    token: access_token,
+  },
+});
   } catch (error) {
     next(error);
   }
@@ -49,6 +58,17 @@ const access_token=await generateToken({
   maxAge:30*60*60*1000,
   })
   console.table({access_token,refresh_token});
+  res.json({
+    message: "register success.",
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      status: user.status,
+      token: access_token,
+    },
+  });
 } catch (error) {
   next(error);
 }
