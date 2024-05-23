@@ -14,15 +14,38 @@ module.exports.register = async (req, res, next) => {
       status,
       password,
     });
-const access_token=await generateToken({
-userId:newUser._id},"1d",process.env.ACCESS_TOKEN_SECRET);
-const refresh_token=await generateToken({
-  userId:newUser._id},"1d",process.env.REFRESH_TOKEN_SECRET);
+// const access_token=await generateToken({
+// userId:newUser._id},"1d",process.env.ACCESS_TOKEN_SECRET);
+// const refresh_token=await generateToken({
+//   userId:newUser._id},"30d",process.env.REFRESH_TOKEN_SECRET);
+let access_token,refresh_token;
+
+try {
+ access_token = await generateToken(
+    { userId: newUser._id },
+    "1d",
+    process.env.ACCESS_TOKEN_SECRET
+  );
+} catch (tokenError) {
+  console.error("Error generating access token:", tokenError);
+  throw createHttpError.InternalServerError("Failed to generate access token.");
+}
+
+try {
+  refresh_token = await generateToken(
+    { userId: newUser._id },
+    "30d",
+    process.env.REFRESH_TOKEN_SECRET
+  );
+} catch (tokenError) {
+  console.error("Error generating refresh token:", tokenError);
+  throw createHttpError.InternalServerError("Failed to generate refresh token.");
+}
 
 res.cookie('refreshtoken',refresh_token,{
 httpOnly:true,
 path:"/auth/refereshtoken",
-maxAge:30*60*60*1000,
+maxAge:30*24*60*60*1000,
 })
 console.table({access_token,refresh_token});
 res.json({
