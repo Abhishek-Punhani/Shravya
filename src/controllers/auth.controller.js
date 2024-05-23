@@ -70,11 +70,31 @@ module.exports.login = async (req, res, next) => {
 try {
   
 const {email,password}=req.body;
+console.log(req.body);
 const user=await signUser(email,password);  /// in auth.services
-const access_token=await generateToken({
-  userId:user._id},"1d",process.env.ACCESS_TOKEN_SECRET);
-  const refresh_token=await generateToken({
-    userId:user._id},"1d",process.env.REFRESH_TOKEN_SECRET);
+let access_token,refresh_token;
+try {
+  access_token = await generateToken(
+     { userId: user._id },
+     "1d",
+     process.env.ACCESS_TOKEN_SECRET
+   );
+ } catch (tokenError) {
+   console.error("Error generating access token:", tokenError);
+   throw createHttpError.InternalServerError("Failed to generate access token.");
+ }
+ 
+ try {
+   refresh_token = await generateToken(
+     { userId: user._id },
+     "30d",
+     process.env.REFRESH_TOKEN_SECRET
+   );
+ } catch (tokenError) {
+   console.error("Error generating refresh token:", tokenError);
+   throw createHttpError.InternalServerError("Failed to generate refresh token.");
+ }
+ 
   
   res.cookie('refreshtoken',refresh_token,{
   httpOnly:true,

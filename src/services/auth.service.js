@@ -75,19 +75,16 @@ module.exports.createUser = async (userData) => {
 };
 
 
-module.exports.signUser=async(email,password)=>{
-  const user=UserModel.findOne({email:email.toLowerCase()}).lean();
+module.exports. signUser = async (email, password) => {
+  const user = await UserModel.findOne({ email: email.toLowerCase() }).lean();
 
+  //check if user exist
+  if (!user) throw createHttpError.NotFound("Invalid credentials.");
 
-  // if user does'nt exist
+  //compare passwords
+  let passwordMatches = await bcrypt.compare(password, user.password);
 
-  if(!user) throw new createHttpError.NotFound("Invalid Credentials");
-
-  // mathing passwords
-
-  let pass_match= await bcrypt.compare(password,user.password);
-  if(!pass_match) throw new createHttpError.NotFound("Invalid Credentials");
+  if (!passwordMatches) throw createHttpError.NotFound("Invalid credentials.");
 
   return user;
-  
-}
+};
