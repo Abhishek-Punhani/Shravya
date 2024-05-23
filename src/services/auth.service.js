@@ -1,6 +1,6 @@
 const createHttpError=require("http-errors");
 const validator=require("validator");
-const { UserModel } =require( "../models/index.js");
+const UserModel =require( "../models/index.js");
 const bcrypt=require("bcrypt");
 
 //env variables
@@ -41,7 +41,7 @@ module.exports.createUser = async (userData) => {
   }
 
   //check if user already exist
-  const checkDb = await UserModel.findOne({ email });
+  const checkDb = await UserModel.findOne({email});
   if (checkDb) {
     throw createHttpError.Conflict(
       "Please try again with a different email address, this email already exist."

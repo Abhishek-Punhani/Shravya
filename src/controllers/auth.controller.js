@@ -2,6 +2,7 @@ const { http } = require("winston");
 const { createUser, signUser }=require( "../services/auth.service.js");
 const { generateToken, verifyToken } = require("../services/token.service.js");
 const createHttpError = require("http-errors");
+const { findUser } = require("../services/user.service.js");
 
 module.exports.register = async (req, res, next) => {
   try {
@@ -99,7 +100,16 @@ module.exports.refreshtoken=async(req,res,next)=>{
     const user=findUser(check.userId); // user id in check :: findUser in user.services
     const access_token=await generateToken({
       userId:user._id},"1d",process.env.ACCESS_TOKEN_SECRET);
-
+      res.json({
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          picture: user.picture,
+          status: user.status,
+          token: access_token,
+        },
+      });
   } catch (error) {
     next(error);
   }
