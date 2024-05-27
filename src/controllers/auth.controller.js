@@ -3,6 +3,7 @@ const { createUser, signUser }=require( "../services/auth.service.js");
 const { generateToken, verifyToken } = require("../services/token.service.js");
 const createHttpError = require("http-errors");
 const { findUser } = require("../services/user.service.js");
+const logger = require("../configs/logger.js");
 
 module.exports.register = async (req, res, next) => {
   try {
@@ -27,7 +28,7 @@ try {
     process.env.ACCESS_TOKEN_SECRET
   );
 } catch (tokenError) {
-  console.error("Error generating access token:", tokenError);
+  logger.error("Error generating access token:", tokenError);
   throw createHttpError.InternalServerError("Failed to generate access token.");
 }
 
@@ -38,7 +39,7 @@ try {
     process.env.REFRESH_TOKEN_SECRET
   );
 } catch (tokenError) {
-  console.error("Error generating refresh token:", tokenError);
+  logger.error("Error generating refresh token:", tokenError);
   throw createHttpError.InternalServerError("Failed to generate refresh token.");
 }
 
@@ -80,7 +81,7 @@ try {
      process.env.ACCESS_TOKEN_SECRET
    );
  } catch (tokenError) {
-   console.error("Error generating access token:", tokenError);
+   logger.error("Error generating access token:", tokenError);
    throw createHttpError.InternalServerError("Failed to generate access token.");
  }
  
@@ -91,7 +92,7 @@ try {
      process.env.REFRESH_TOKEN_SECRET
    );
  } catch (tokenError) {
-   console.error("Error generating refresh token:", tokenError);
+   logger.error("Error generating refresh token:", tokenError);
    throw createHttpError.InternalServerError("Failed to generate refresh token.");
  }
  
