@@ -53,3 +53,11 @@ module.exports.getUserConversations=async (user_id)=>{
   });
   return conversations;
 }
+
+module.exports.updateLatestMessage=async (convo_id,message)=>{
+    let updatedLatestMessage=await ConversationModel.findByIdAndUpdate(convo_id,{
+        latestMessage:message,
+    })
+    if(!updatedLatestMessage) throw createHttpError.BadRequest("OOPS SOMETHING WENT WRONG !");
+    return updatedLatestMessage;
+}

@@ -19,10 +19,11 @@ module.exports.create_open_conversation=async (req,res,next)=>{
             let reciever_user=await findUser(reciever_id);
             let convoData={
                 name:reciever_user.name,
+                picture:reciever_id.picture,
                 isGroup:false,
                 users:[sender_id,reciever_id],
             }
-            const newConvo=await createConversation(newConvo);
+            const newConvo=await createConversation(convoData);
             const populatedConvo=await populateConversation(newConvo)
             res.json(populatedConvo);
         }

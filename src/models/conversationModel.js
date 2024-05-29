@@ -1,11 +1,17 @@
 const mongoose=require("mongoose");
 const { trim } = require("validator");
+const {ObjectId} =require("mongoose.Schema.Types")
+
 
 const conversationSchema=mongoose.Schema({
     name:{
         type:String,
         required:[true,"Name is required!"],
         trim:true,
+    },
+    picture:{
+        type:String,
+        required:true,
     },
     isGroup:{
         type:Boolean,
