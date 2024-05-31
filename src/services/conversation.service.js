@@ -1,14 +1,14 @@
 const createHttpError = require("http-errors");
 const ConversationModel = require("../models/conversationModel.js");
-const UserModel = require("../models");
+const UserModel = require("../models/userModel.js");
 
 module.exports.doesConversationExist=async (sender_id,reciever_id)=>{
-    let convo=ConversationModel.find({
+    let convo=await ConversationModel.find({
         isGroup:false,
         $and:[
             {users:{$elemMatch:{$eq: sender_id}}},
             {users:{$elemMatch:{$eq: reciever_id}}}
-        ]
+        ],
     }).populate("user","-password").populate("latestMessage");
     if(!convo){
         throw createHttpError.BadRequest("OOPS SOMETHING WENT WRONG !");
@@ -30,9 +30,12 @@ return newConvo;
 }
 
 module.exports.populateConversation=async (id,fieldsToPopulate,fieldsToRemove)=>{
-    const populatedConvo=await ConversationModel.findById(id).populate(fieldsToPopulate,fieldsToRemove);
+    const populatedConvo = await ConversationModel.findOne({ _id: id }).populate(
+        fieldsToPopulate,
+        fieldsToRemove
+      );
     if(!populatedConvo)  throw createHttpError.BadRequest("OOPS SOMETHING WENT WRONG !");
-    return(populatedConvo);
+    return populatedConvo;
 }
 
 module.exports.getUserConversations=async (user_id)=>{

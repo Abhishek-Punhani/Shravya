@@ -7,7 +7,7 @@ async function authMiddleware (req,res,next){
     const bearerToken=req.headers["authorisation"];
     const token=bearerToken.split(" ")[1]; // removing bearer word and accessing token which 2nd part of string
     jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(error,payload)=>{
-        if(err){
+        if(error){
           next(createHttpError.Unauthorized())
         }else{
             req.user=payload;

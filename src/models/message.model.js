@@ -1,5 +1,5 @@
 const mongoose =require("mongoose");
-const {ObjectId}=require("mongoose.Schema.Types");
+const { ObjectId } = mongoose.Schema.Types;
 
 
 const messageSchema=mongoose.Schema({
