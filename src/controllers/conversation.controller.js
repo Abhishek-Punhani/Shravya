@@ -14,6 +14,11 @@ module.exports.create_open_conversation=async (req,res,next)=>{
             throw createHttpError.BadRequest("Something went wrong!")
         }
         // check if chat exist or not
+        console.log(doesConversationExist);
+        console.log(findUser);
+        console.log(createConversation);
+        console.log(getUserConversations);
+        console.log(populateConversation);
         const existed_conversation=await doesConversationExist(sender_id,reciever_id);
         if(existed_conversation){
             res.json(existed_conversation);
@@ -37,7 +42,9 @@ module.exports.create_open_conversation=async (req,res,next)=>{
 
 module.exports.getConversations=async (req,res,next)=>{
     try {
+        console.log(req.body);
         const user_id=req.user.userId;
+        console.log(user_id);
         const conversations=await getUserConversations(user_id);
         res.status(200).json(conversations);
     } catch (error) {

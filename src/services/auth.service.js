@@ -1,6 +1,6 @@
 const createHttpError=require("http-errors");
 const validator=require("validator");
-const UserModel =require( "../models/index.js");
+const UserModel =require( "../models/userModel.js");
 const bcrypt=require("bcrypt");
 
 //env variables

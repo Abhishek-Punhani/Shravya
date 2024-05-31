@@ -9,6 +9,7 @@ module.exports.sendMessage=async (req,res,next)=>{
         if((!convo_id)||(!message && !files)){
             logger.error("Please Provide Convo_id and Message Data");
             return res.sendStatus(400);
+        }
             const msgData={
                 sender:user_id,
                 message:message,
@@ -20,10 +21,10 @@ module.exports.sendMessage=async (req,res,next)=>{
             await updateLatestMessage(convo_id,newMsg);
             res.json(populatedMsg);
         }
-    } catch (error) {
+     catch (error) {
         next(error);
     }
-}
+};
 module.exports.getMessages=async (req,res,next)=>{
     try {
         const {convo_id}=req.params;
