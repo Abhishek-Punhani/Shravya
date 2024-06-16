@@ -1,4 +1,4 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 const conversationSchema = mongoose.Schema(
   {
@@ -24,7 +24,7 @@ const conversationSchema = mongoose.Schema(
     ],
     latestMessage: {
       type: ObjectId,
-      ref: "Messagel",
+      ref: "Message",
     },
     admin: {
       type: ObjectId,
@@ -41,4 +41,4 @@ const ConversationModel =
   mongoose.models.ConversationModel ||
   mongoose.model("Conversation", conversationSchema);
 
-module.exports=ConversationModel;
+module.exports = ConversationModel;

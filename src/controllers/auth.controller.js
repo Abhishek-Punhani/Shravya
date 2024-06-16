@@ -1,4 +1,3 @@
-const { http } = require("winston");
 const { createUser, signUser } = require("../services/auth.service.js");
 const { generateToken, verifyToken } = require("../services/token.service.js");
 const createHttpError = require("http-errors");
