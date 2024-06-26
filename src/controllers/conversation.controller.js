@@ -27,10 +27,10 @@ module.exports.create_open_conversation = async (req, res, next) => {
     if (existed_conversation) {
       res.json(existed_conversation);
     } else {
-      let reciever_user = await findUser(reciever_id);
+      // let reciever_user = await findUser(reciever_id);
       let convoData = {
-        name: reciever_user.name,
-        picture: reciever_user.picture,
+        name: "name",
+        picture: "picture",
         isGroup: false,
         users: [sender_id, reciever_id],
       };
@@ -49,9 +49,7 @@ module.exports.create_open_conversation = async (req, res, next) => {
 
 module.exports.getConversations = async (req, res, next) => {
   try {
-    console.log(req.body);
     const user_id = req.user.userId;
-    console.log(user_id);
     const conversations = await getUserConversations(user_id);
     res.status(200).json(conversations);
   } catch (error) {
