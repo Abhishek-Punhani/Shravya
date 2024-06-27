@@ -79,3 +79,19 @@ module.exports.updateLatestMessage = async (convo_id, message) => {
     throw createHttpError.BadRequest("OOPS SOMETHING WENT WRONG !");
   return updatedLatestMessage;
 };
+
+module.exports.doesGroupExist = async (isGroup) => {
+  let convo = await ConversationModel.findById(isGroup)
+    .populate("users", "-password")
+    .populate("latestMessage");
+  if (!convo) {
+    return null;
+  }
+  // populating messages
+  convo = await UserModel.populate(convo, {
+    path: "latestMessage.sender",
+    select: "name email status picture",
+  });
+
+  return convo; // since find willl return an array
+};

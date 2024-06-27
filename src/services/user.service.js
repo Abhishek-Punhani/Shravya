@@ -13,8 +13,10 @@ module.exports.searchedUsers = async (keyword, userId) => {
       { name: { $regex: `${keyword}`, $options: "i" } },
       { email: { $regex: `${keyword}`, $options: "i" } },
     ],
-  }).find({
-    _id: { $ne: userId },
-  });
+  })
+    .find({
+      _id: { $ne: userId },
+    })
+    .select("-password");
   return users;
 };
