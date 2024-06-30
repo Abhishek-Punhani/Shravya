@@ -10,6 +10,8 @@ module.exports = (socket, io) => {
 
     // Sending Online users to frontend
     io.emit("get-online-users", onlineUsers);
+    // Send socket id
+    io.emit("get_socket", socket.id);
   });
 
   //   socket disconnected
@@ -43,5 +45,32 @@ module.exports = (socket, io) => {
   socket.on("stop_typing", (conversation_id) => {
     console.log("stopped Typing", conversation_id);
     socket.in(conversation_id).emit("stop_typing");
+  });
+  // Call
+  socket.on("call_user", (data) => {
+    let userId = data.userToCall;
+    let userSocketId = onlineUsers.find((user) => user.userId == userId);
+    io.to(userSocketId.socketId).emit("call_user", {
+      signal: data.signal,
+      from: data.from,
+      name: data.name,
+      picture: data.picture,
+      socketId: userSocketId.socketId,
+    });
+  });
+
+  // Answer Call
+  socket.on("answer_call", (data) => {
+    io.to(data.to).emit("call_accepted", {
+      signal: data.signal,
+      callerId: data.from,
+    });
+  });
+  // End Call
+  socket.on("call_ended", (id) => {
+    let userId = id;
+    let userSocketId = onlineUsers.find((user) => user.userId == userId);
+    console.log(id);
+    io.to(userSocketId).emit("call_ended");
   });
 };
