@@ -47,30 +47,28 @@ module.exports = (socket, io) => {
     socket.in(conversation_id).emit("stop_typing");
   });
   // Call
-  socket.on("call_user", (data) => {
-    let userId = data.userToCall;
-    let userSocketId = onlineUsers.find((user) => user.userId == userId);
-    io.to(userSocketId.socketId).emit("call_user", {
-      signal: data.signal,
-      from: data.from,
-      name: data.name,
-      picture: data.picture,
-      socketId: userSocketId.socketId,
-    });
+  socket.on("outgoing-call", (data) => {
+    let userSocketId = onlineUsers.find((user) => user.userId == data.to);
+    if (userSocketId?.socketId) {
+      io.to(userSocketId.socketId).emit("incoming-call", {
+        from: data.from,
+        roomId: data.roomId,
+        callType: data.callType,
+      });
+    }
+  });
+  socket.on("reject-call", (id) => {
+    let userSocketId = onlineUsers.find((user) => user.userId == id);
+    if (userSocketId?.socketId) {
+      io.to(userSocketId.socketId).emit("call-rejected");
+    }
   });
 
-  // Answer Call
-  socket.on("answer_call", (data) => {
-    io.to(data.to).emit("call_accepted", {
-      signal: data.signal,
-      callerId: data.from,
-    });
-  });
-  // End Call
-  socket.on("call_ended", (id) => {
-    let userId = id;
-    let userSocketId = onlineUsers.find((user) => user.userId == userId);
+  socket.on("accept-incoming-call", (id) => {
     console.log(id);
-    io.to(userSocketId).emit("call_ended");
+    let userSocketId = onlineUsers.find((user) => user.userId == id);
+    if (userSocketId?.socketId) {
+      io.to(userSocketId.socketId).emit("call-accepted");
+    }
   });
 };

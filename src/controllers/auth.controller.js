@@ -96,6 +96,8 @@ module.exports.logout = async (req, res, next) => {
 module.exports.refreshtoken = async (req, res, next) => {
   try {
     const refresh_token = req.cookies.refreshtoken;
+    console.log(req.cookies);
+    return;
     if (!refresh_token) throw createHttpError.Unauthorized("Please login.");
     const check = await verifyToken(
       refresh_token,

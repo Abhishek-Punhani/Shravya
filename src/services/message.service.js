@@ -33,3 +33,15 @@ module.exports.getConvoMessages = async (convo_id) => {
     throw createHttpError.BadRequest("OOPS SOMETHING WENT WRONG !");
   return messages;
 };
+
+module.exports.editMessage = async (id, message) => {
+  let edtMessage = await MessageModel.findByIdAndUpdate(
+    id,
+    {
+      ...message,
+      isEdited: true,
+    },
+    { new: true }
+  );
+  return edtMessage;
+};
