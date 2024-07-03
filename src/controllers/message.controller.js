@@ -5,12 +5,14 @@ const {
   populateMsg,
   getConvoMessages,
   editMessage,
+  deleteMsg,
 } = require("../services/message.service.js");
 
 module.exports.sendMessage = async (req, res, next) => {
   try {
     const user_id = req.user.userId;
-    const { message, convo_id, files } = req.body;
+    console.log(req.body);
+    const { message, convo_id, files, isReply } = req.body;
     if (!convo_id || (!message && !files)) {
       logger.error("Please Provide Convo_id and Message Data");
       return res.sendStatus(400);
@@ -20,6 +22,7 @@ module.exports.sendMessage = async (req, res, next) => {
       message: message,
       conversation: convo_id,
       files: files || [],
+      isReply: isReply,
     };
     const newMsg = await createMsg(msgData);
     const populatedMsg = await populateMsg(newMsg._id);
@@ -48,7 +51,21 @@ module.exports.editMessage = async (req, res, next) => {
     const id = message._id;
     if (id && message.message.length > 0) {
       const editedMsg = await editMessage(id, message);
-      return res.status(200).json(editedMsg);
+      const populatedMsg = await populateMsg(editedMsg._id);
+      return res.status(200).json(populatedMsg);
+    } else {
+      return res.sendStatus(400);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports.deleteMessage = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    if (id) {
+      const deletedMsg = await deleteMsg(id);
+      return res.status(200).json(deletedMsg._id);
     } else {
       return res.sendStatus(400);
     }

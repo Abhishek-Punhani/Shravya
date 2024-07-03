@@ -45,3 +45,8 @@ module.exports.editMessage = async (id, message) => {
   );
   return edtMessage;
 };
+
+module.exports.deleteMsg = async (id) => {
+  let msg = await MessageModel.findByIdAndDelete(id);
+  return msg;
+};

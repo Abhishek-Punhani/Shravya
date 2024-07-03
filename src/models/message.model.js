@@ -20,6 +20,34 @@ const messageSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isReply: {
+      name: {
+        type: String,
+        default: "",
+      },
+      message: {
+        type: String,
+        default: "",
+      },
+      file: {
+        name: {
+          type: String,
+          default: "",
+        },
+        url: {
+          type: String,
+          default: "",
+        },
+        type: {
+          type: String,
+          default: "",
+        },
+      },
+      id: {
+        type: ObjectId,
+        ref: "User",
+      },
+    },
   },
   {
     collection: "messages",

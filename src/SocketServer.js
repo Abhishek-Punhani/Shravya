@@ -29,7 +29,6 @@ module.exports = (socket, io) => {
   socket.on("new_message", (message) => {
     let conversation = message.conversation;
     if (!conversation?.users) return;
-
     conversation.users.forEach((user) => {
       if (user._id === message.sender._id) return;
       socket.in(user._id).emit("message_recieved", message);
@@ -70,5 +69,23 @@ module.exports = (socket, io) => {
     if (userSocketId?.socketId) {
       io.to(userSocketId.socketId).emit("call-accepted");
     }
+  });
+
+  socket.on("editMsg", (data) => {
+    let users = data.edt.conversation.users;
+    if (!users) {
+      return;
+    }
+    console.log(data);
+    users = users.filter((user) => user !== data.user._id);
+    console.log(users);
+    users.forEach((user) => {
+      let userSocketId = onlineUsers.find((item) => item.userId === user);
+      console.log(userSocketId);
+      if (userSocketId?.socketId) {
+        console.log("hihi");
+        io.to(userSocketId.socketId).emit("editMsg", data.edt);
+      }
+    });
   });
 };
