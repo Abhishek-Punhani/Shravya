@@ -62,7 +62,10 @@ module.exports.editMessage = async (req, res, next) => {
 };
 module.exports.deleteMessage = async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { id, LastMessage } = req.body;
+    if (LastMessage) {
+      await updateLatestMessage(LastMessage.conversation._id, LastMessage);
+    }
     if (id) {
       const deletedMsg = await deleteMsg(id);
       return res.status(200).json(deletedMsg);
