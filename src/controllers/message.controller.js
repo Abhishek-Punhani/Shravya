@@ -65,7 +65,7 @@ module.exports.deleteMessage = async (req, res, next) => {
     const { id } = req.body;
     if (id) {
       const deletedMsg = await deleteMsg(id);
-      return res.status(200).json(deletedMsg._id);
+      return res.status(200).json(deletedMsg);
     } else {
       return res.sendStatus(400);
     }

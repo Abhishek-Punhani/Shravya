@@ -1,3 +1,4 @@
+const createHttpError = require("http-errors");
 const MessageModel = require("../models");
 
 module.exports.createMsg = async (data) => {
@@ -47,6 +48,7 @@ module.exports.editMessage = async (id, message) => {
 };
 
 module.exports.deleteMsg = async (id) => {
-  let msg = await MessageModel.findByIdAndDelete(id);
-  return msg;
+  let populatedmsg = await this.populateMsg(id);
+  await MessageModel.findByIdAndDelete(id);
+  return populatedmsg;
 };

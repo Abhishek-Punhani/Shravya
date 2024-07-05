@@ -70,21 +70,36 @@ module.exports = (socket, io) => {
       io.to(userSocketId.socketId).emit("call-accepted");
     }
   });
-
+  // Edite Message
   socket.on("editMsg", (data) => {
     let users = data.edt.conversation.users;
     if (!users) {
       return;
     }
-    console.log(data);
     users = users.filter((user) => user !== data.user._id);
     console.log(users);
     users.forEach((user) => {
-      let userSocketId = onlineUsers.find((item) => item.userId === user);
+      let userSocketId = onlineUsers.find((item) => item.userId === user._id);
       console.log(userSocketId);
       if (userSocketId?.socketId) {
         console.log("hihi");
         io.to(userSocketId.socketId).emit("editMsg", data.edt);
+      }
+    });
+  });
+
+  // Delete Message
+  socket.on("deleteMsg", (msg) => {
+    let users = msg.conversation.users;
+    if (!users) {
+      return;
+    }
+    users = users.filter((user) => user._id !== msg.sender._id);
+    users.forEach((user) => {
+      let userSocketId = onlineUsers.find((item) => item.userId === user._id);
+      console.log(userSocketId);
+      if (userSocketId?.socketId) {
+        io.to(userSocketId.socketId).emit("deleteMsg", msg);
       }
     });
   });
