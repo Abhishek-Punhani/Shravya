@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
 const corsOptions = {
-  origin: "http://localhost:3000", // Specify your frontend's origin
+  origin: process.env.CLIENT_API, // Specify your frontend's origin
   credentials: true, // This allows cookies to be sent
 };
 
