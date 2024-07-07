@@ -15,7 +15,7 @@ const messageSchema = mongoose.Schema(
       type: ObjectId,
       ref: "Conversation",
     },
-    files: [],
+    file: {},
     isEdited: {
       type: Boolean,
       default: false,
@@ -23,30 +23,34 @@ const messageSchema = mongoose.Schema(
     isReply: {
       name: {
         type: String,
-        default: "",
+        default: undefined,
       },
       message: {
         type: String,
-        default: "",
+        default: undefined,
       },
       file: {
         name: {
           type: String,
-          default: "",
+          default: undefined,
         },
         url: {
           type: String,
-          default: "",
+          default: undefined,
         },
         type: {
           type: String,
-          default: "",
+          default: undefined,
         },
       },
       id: {
         type: ObjectId,
         ref: "User",
       },
+    },
+    isForwarded: {
+      type: ObjectId,
+      ref: "Message",
     },
   },
   {

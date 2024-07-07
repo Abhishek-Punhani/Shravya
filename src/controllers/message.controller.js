@@ -12,8 +12,8 @@ module.exports.sendMessage = async (req, res, next) => {
   try {
     const user_id = req.user.userId;
     console.log(req.body);
-    const { message, convo_id, files, isReply } = req.body;
-    if (!convo_id || (!message && !files)) {
+    const { message, convo_id, file, isReply, isForwarded } = req.body;
+    if (!convo_id || (!message && !file)) {
       logger.error("Please Provide Convo_id and Message Data");
       return res.sendStatus(400);
     }
@@ -21,8 +21,9 @@ module.exports.sendMessage = async (req, res, next) => {
       sender: user_id,
       message: message,
       conversation: convo_id,
-      files: files || [],
+      file: file || {},
       isReply: isReply,
+      isForwarded: isForwarded,
     };
     const newMsg = await createMsg(msgData);
     const populatedMsg = await populateMsg(newMsg._id);
