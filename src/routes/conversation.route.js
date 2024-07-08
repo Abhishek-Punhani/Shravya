@@ -7,6 +7,7 @@ const {
   getConversations,
   createGroup,
   generateToken,
+  deleteConversation,
 } = require("../controllers/conversation.controller.js");
 router
   .route("/")
@@ -16,4 +17,7 @@ router.route("/group").post(trimRequest.all, authMiddleware, createGroup);
 router
   .route("/get_zego_token")
   .get(trimRequest.all, authMiddleware, generateToken);
+router
+  .route("/delete")
+  .post(trimRequest.all, authMiddleware, deleteConversation);
 module.exports = router;

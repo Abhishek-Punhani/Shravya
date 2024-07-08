@@ -2,6 +2,7 @@ const createHttpError = require("http-errors");
 const {
   doesConversationExist,
   doesGroupExist,
+  deleteConvo,
 } = require("../services/conversation.service.js");
 const { findUser } = require("../services/user.service.js");
 const {
@@ -115,6 +116,20 @@ module.exports.generateToken = async (req, res, next) => {
       return res.status(200).json({ token });
     }
     return res.status(400).send("Something Went Wrong!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.deleteConversation = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    if (id) {
+      const deletedConvo = await deleteConvo(id);
+      return res.status(200).json(deletedConvo);
+    } else {
+      return res.sendStatus(400);
+    }
   } catch (error) {
     next(error);
   }

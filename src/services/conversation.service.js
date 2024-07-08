@@ -2,6 +2,7 @@ const createHttpError = require("http-errors");
 const ConversationModel = require("../models/conversationModel.js");
 const UserModel = require("../models/userModel.js");
 const logger = require("../configs/logger.js");
+const { getConvoMessages, deleteMsg } = require("./message.service.js");
 
 module.exports.doesConversationExist = async (sender_id, reciever_id) => {
   let convo = await ConversationModel.find({
@@ -94,4 +95,13 @@ module.exports.doesGroupExist = async (isGroup) => {
   });
 
   return convo; // since find willl return an array
+};
+
+module.exports.deleteConvo = async (id) => {
+  let messages = await getConvoMessages(id);
+  for (const message of messages) {
+    await deleteMsg(message._id);
+  }
+  let deletedConvo = await ConversationModel.findByIdAndDelete(id);
+  return deletedConvo;
 };

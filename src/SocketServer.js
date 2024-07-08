@@ -35,15 +35,31 @@ module.exports = (socket, io) => {
     });
   });
   // typing..
-  socket.on("typing", (conversation_id) => {
-    console.log("Typing", conversation_id);
-    socket.in(conversation_id).emit("typing", conversation_id);
+  socket.on("typing", (data) => {
+    let users = data.convo.users;
+    users = users.filter((user) => user._id !== data.id);
+    users.forEach((user) => {
+      let userSocketId = onlineUsers.find((item) => item.userId === user._id);
+      if (userSocketId?.socketId) {
+        console.log("Typing");
+        io.to(userSocketId.socketId).emit("typing", data.convo._id);
+      }
+    });
+
+    // socket.in(conversation_id).emit("typing", conversation_id);
   });
 
   // stop typing
-  socket.on("stop_typing", (conversation_id) => {
-    console.log("stopped Typing", conversation_id);
-    socket.in(conversation_id).emit("stop_typing");
+  socket.on("stop_typing", (data) => {
+    let users = data.convo.users;
+    users = users.filter((user) => user._id !== data.id);
+    users.forEach((user) => {
+      let userSocketId = onlineUsers.find((item) => item.userId === user._id);
+      if (userSocketId?.socketId) {
+        console.log("Stop Typing");
+        io.to(userSocketId.socketId).emit("stop_typing");
+      }
+    });
   });
   // Call
   socket.on("outgoing-call", (data) => {
@@ -77,7 +93,6 @@ module.exports = (socket, io) => {
       return;
     }
     users = users.filter((user) => user !== data.user._id);
-    console.log(users);
     users.forEach((user) => {
       let userSocketId = onlineUsers.find((item) => item.userId === user._id);
       console.log(userSocketId);
@@ -90,7 +105,7 @@ module.exports = (socket, io) => {
 
   // Delete Message
   socket.on("deleteMsg", (msg) => {
-    let users = msg.conversation.users;
+    let users = msg?.conversation?.users;
     if (!users) {
       return;
     }
