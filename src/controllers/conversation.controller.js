@@ -48,7 +48,6 @@ module.exports.create_open_conversation = async (req, res, next) => {
       }
     } else {
       // Group Chat
-      console.log(isGroup);
       if (!isGroup) {
         logger.error("Group convo id not recieved!");
         throw createHttpError.BadRequest("Something went wrong!");
@@ -83,7 +82,7 @@ module.exports.createGroup = async (req, res, next) => {
       name,
       users,
       isGroup: true,
-      admin: req.user.userId,
+      admin: [req.user.userId],
       picture: process.env.DEFAULT_GROUP_PICTURE,
     };
     let newConvo = await createConversation(convoData);

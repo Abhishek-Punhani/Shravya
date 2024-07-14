@@ -20,3 +20,20 @@ module.exports.searchedUsers = async (keyword, userId) => {
     .select("-password");
   return users;
 };
+
+module.exports.updateUser = async (id, user) => {
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    id,
+    {
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      status: user.status,
+    },
+    {
+      new: true,
+      select: "name email picture status",
+    }
+  );
+  return updatedUser;
+};

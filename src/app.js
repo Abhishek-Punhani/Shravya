@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -7,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
-const logger = require("./configs/logger");
 const createHttpError = require("http-errors");
 const routes = require("./routes/index.js");
 
@@ -17,11 +15,11 @@ const app = express();
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
-
+app.disable("x-powered-by");
 app.use(helmet());
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(mongoSanitize());
 const corsOptions = {
   origin: process.env.CLIENT_API, // Specify your frontend's origin

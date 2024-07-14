@@ -84,6 +84,7 @@ module.exports.updateLatestMessage = async (convo_id, message) => {
 module.exports.doesGroupExist = async (isGroup) => {
   let convo = await ConversationModel.findById(isGroup)
     .populate("users", "-password")
+    .populate("admin", "-password")
     .populate("latestMessage");
   if (!convo) {
     return null;

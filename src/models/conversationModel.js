@@ -26,9 +26,15 @@ const conversationSchema = mongoose.Schema(
       type: ObjectId,
       ref: "Message",
     },
-    admin: {
-      type: ObjectId,
-      ref: "User",
+    admin: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
+    description: {
+      type: String,
+      default: "",
     },
   },
   {
