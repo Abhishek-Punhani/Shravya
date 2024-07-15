@@ -1,13 +1,13 @@
-const createHttpError=require("http-errors");
-const validator=require("validator");
-const UserModel =require( "../models/userModel.js");
-const bcrypt=require("bcrypt");
+const createHttpError = require("http-errors");
+const validator = require("validator");
+const UserModel = require("../models/userModel.js");
+const bcrypt = require("bcrypt");
 
 //env variables
 const { DEFAULT_PICTURE, DEFAULT_STATUS } = process.env;
 
 module.exports.createUser = async (userData) => {
-  const { name, email, picture, status, password } = userData;
+  const { name, email, picture, status, password, googleId } = userData;
 
   //check if fields are empty
   if (!name || !email || !password) {
@@ -41,7 +41,7 @@ module.exports.createUser = async (userData) => {
   }
 
   //check if user already exist
-  const checkDb = await UserModel.findOne({email});
+  const checkDb = await UserModel.findOne({ email });
   if (checkDb) {
     throw createHttpError.Conflict(
       "Please try again with a different email address, this email already exist."
@@ -69,13 +69,13 @@ module.exports.createUser = async (userData) => {
     picture: picture || DEFAULT_PICTURE,
     status: status || DEFAULT_STATUS,
     password,
+    googleId,
   }).save();
 
   return user;
 };
 
-
-module.exports. signUser = async (email, password) => {
+module.exports.signUser = async (email, password) => {
   const user = await UserModel.findOne({ email: email.toLowerCase() }).lean();
 
   //check if user exist

@@ -1,6 +1,10 @@
 const createHttpError = require("http-errors");
 const UserModel = require("../models/userModel.js");
-
+module.exports.doesUserExist = async (googleId) => {
+  const user = await UserModel.find({ googleId: googleId });
+  if (!user) return false;
+  return user;
+};
 module.exports.findUser = async (userId) => {
   const user = await UserModel.findById(userId);
   if (!user) throw createHttpError.BadRequest("Please fil all fields!");

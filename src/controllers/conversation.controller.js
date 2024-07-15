@@ -72,7 +72,7 @@ module.exports.getConversations = async (req, res, next) => {
 };
 
 module.exports.createGroup = async (req, res, next) => {
-  const { name, users } = req.body;
+  const { name, users, picture, description } = req.body;
   if (!name || !users) {
     throw createHttpError.BadRequest("Please Ensure group has name and users!");
   }
@@ -83,7 +83,8 @@ module.exports.createGroup = async (req, res, next) => {
       users,
       isGroup: true,
       admin: [req.user.userId],
-      picture: process.env.DEFAULT_GROUP_PICTURE,
+      picture: picture,
+      description: description,
     };
     let newConvo = await createConversation(convoData);
     let populatedConvo = await populateConversation(
